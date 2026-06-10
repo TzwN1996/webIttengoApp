@@ -19,7 +19,7 @@ ANTHROPIC_API_KEY=your_key ruby app.rb
 git init
 git add .
 git commit -m "初回リリース: 一転語"
-git remote add origin https://github.com/YOUR_USERNAME/ichtengo.git
+git remote add origin https://github.com/YOUR_USERNAME/webIttengoApp.git
 git push -u origin main
 ```
 
@@ -56,7 +56,7 @@ Render のダッシュボード → Environment → Add Environment Variable:
 ## ファイル構成
 
 ```
-ichtengo/
+ittengoApp/
 ├── app.rb          # Sinatra メインアプリ
 ├── config.ru       # Rack 設定
 ├── Gemfile
