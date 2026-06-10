@@ -1,4 +1,4 @@
-# 一転語 — Ichtengo
+# 一転語 — Ittengo
 
 FitnessGame 公式・毎日更新の気づきの言葉アプリ。
 
