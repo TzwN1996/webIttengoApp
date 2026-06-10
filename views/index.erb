@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一転語 — 今日の気づき</title>
+  <meta name="description" content="今日の自分を一転させる言葉。FitnessGame公式・毎日更新の一転語。">
+  <meta property="og:title" content="一転語 — 今日の気づき">
+  <meta property="og:description" content="<%= @phrase[:text] %>">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="grain"></div>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <span class="logo-kanji">一転語</span>
+        <span class="logo-sub">by FitnessGame</span>
+      </a>
+      <nav class="header-nav">
+        <a href="https://twitter.com/intent/tweet?text=<?= URI.encode_www_form_component('#一転語') %>" target="_blank" class="nav-link" aria-label="X でシェア">𝕏</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- カテゴリ選択 -->
+    <nav class="category-nav" aria-label="カテゴリ">
+      <% CATEGORIES.each do |cat| %>
+        <a href="/?category=<%= cat %>&mode=<%= @mode %>"
+           class="category-pill <%= @category == cat ? 'active' : '' %>">
+          <%= cat %>
+        </a>
+      <% end %>
+    </nav>
+
+    <!-- メイン一転語カード -->
+    <section class="phrase-stage" id="phrase-stage">
+      <div class="phrase-card" id="phrase-card">
+        <div class="phrase-date"><%= Time.now.strftime("%Y.%m.%d") %></div>
+
+        <blockquote class="phrase-text" id="phrase-text">
+          <%= @phrase[:text] %>
+        </blockquote>
+
+        <div class="phrase-meta">
+          <span class="phrase-author"><%= @phrase[:author] %></span>
+          <% if @phrase[:ai] %>
+            <span class="badge-ai">AI生成</span>
+          <% end %>
+          <% if @phrase[:fallback] %>
+            <span class="badge-fallback">本日の言葉</span>
+          <% end %>
+        </div>
+      </div>
+    </section>
+
+    <!-- アクション -->
+    <div class="actions">
+      <div class="mode-toggle">
+        <a href="/?category=<%= @category %>&mode=fixed"
+           class="mode-btn <%= @mode == 'fixed' ? 'active' : '' %>">今日の言葉</a>
+        <a href="/?category=<%= @category %>&mode=ai"
+           class="mode-btn <%= @mode == 'ai' ? 'active' : '' %>">✦ AI生成</a>
+      </div>
+
+      <button class="btn-share" id="share-btn" onclick="sharePhrase()">
+        <span class="share-icon">𝕏</span> シェアする
+      </button>
+
+      <button class="btn-copy" id="copy-btn" onclick="copyPhrase()">
+        コピー
+      </button>
+    </div>
+
+    <!-- FitnessGame誘導 -->
+    <aside class="FitnessGame-cta">
+      <div class="cta-inner">
+        <p class="cta-eyebrow">一転語をいつでも</p>
+        <p class="cta-title">FitnessGame でフィットネスをRPGに</p>
+        <p class="cta-desc">筋トレ・習慣をゲームにして、毎日の一転語でモチベーションを維持しよう。</p>
+        <a href="#" class="cta-btn" target="_blank">もうすぐリリース →</a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 FitnessGame — 一転語プロジェクト</p>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const phraseText = <%= @phrase[:text].to_json %>;
+    const category = <%= @category.to_json %>;
+
+    function sharePhrase() {
+      const text = `「${phraseText}」\n\n#一転語 #FitnessGame\nhttps://ichtengo.onrender.com`;
+      const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    function copyPhrase() {
+      navigator.clipboard.writeText(phraseText).then(() => {
+        showToast('コピーしました！');
+      }).catch(() => {
+        showToast('コピーできませんでした');
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // カード入場アニメ
+    document.addEventListener('DOMContentLoaded', () => {
+      const card = document.getElementById('phrase-card');
+      if (card) {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        requestAnimationFrame(() => {
+          card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
